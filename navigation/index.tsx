@@ -4,14 +4,14 @@
  *
  */
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { ColorSchemeName } from 'react-native';
-
-import NotFoundScreen from '../screens/NotFoundScreen';
-import { RootStackParamList } from '../types';
-import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import {HomeTabScreen, HomeStackScreen} from '../screens/home'
+import {SettingTabScreen, SettingStackScreen} from '../screens/setting'
 
 export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
@@ -25,13 +25,51 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 
 // A root stack navigator is often used for displaying modals on top of all other content
 // Read more here: https://reactnavigation.org/docs/modal
-const Stack = createStackNavigator<RootStackParamList>();
+
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 function RootNavigator() {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Root" component={BottomTabNavigator} />
-      <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
+    <StackNavigator/>
+  );
+}
+
+function StackNavigator() {
+  return (
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen name="Home" component={TabNavigator}></Stack.Screen>
+      <Stack.Screen name="HomeStack" component={HomeStackScreen}></Stack.Screen>
+      <Stack.Screen name="Settings" component={SettingTabScreen}></Stack.Screen>
+      <Stack.Screen name="SettingStack" component={SettingStackScreen}></Stack.Screen>
     </Stack.Navigator>
+  )
+}
+
+function TabNavigator() {
+  return (
+    <Tab.Navigator screenOptions={({ route }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+
+        if (route.name === 'Home') {
+          iconName = focused
+            ? 'ios-information-circle'
+            : 'ios-information-circle-outline';
+        } else if (route.name === 'Settings') {
+          iconName = focused ? 'ios-list' : 'ios-list';
+        }
+
+        // You can return any component that you like here!
+        return <Ionicons name={iconName} size={size} color={color} />;
+      },
+    })}
+    tabBarOptions={{
+      activeTintColor: 'tomato',
+      inactiveTintColor: 'gray',
+    }}>
+        <Tab.Screen name="Home" component={HomeTabScreen} options={{ tabBarBadge: 5 }} />
+        <Tab.Screen name="Settings" component={SettingTabScreen} />
+    </Tab.Navigator>
   );
 }
