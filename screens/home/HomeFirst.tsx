@@ -2,8 +2,12 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import { Text, View } from '../../components/Themed';
 import { Button } from 'react-native';
+import { useDispatch } from 'react-redux'
+import {loginAcion, logoutAction} from '../../actions/action'
 
 export default function HomeFirstScreen( {navigation} ) {
+  const dispatch = useDispatch();
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Home</Text>
@@ -19,6 +23,14 @@ export default function HomeFirstScreen( {navigation} ) {
       <Button
         title="Home 3rd Screen"
         onPress={() => navigation.navigate('HomeStack', {screen: 'HomeThirdScreen'})}
+      />
+      <Button
+        title="LogIn"
+        onPress={() => {console.log('LogIn'); dispatch(loginAcion({id:1,pass:2}))}}
+      />
+      <Button
+        title="LogOut"
+        onPress={() => {console.log('LogOut'); dispatch(logoutAction())}}
       />
     </View>
   );
