@@ -6,12 +6,12 @@ import useColorScheme from './hooks/useColorScheme';
 import Navigation from './navigation';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import {store, persistor}from './store/store'
+import configureStore from './store/store'
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
-
+  const {store, persistor} = configureStore();
   if (!isLoadingComplete) {
     return null;
   } else {
